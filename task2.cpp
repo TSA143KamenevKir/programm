@@ -34,7 +34,19 @@ double getTriangleArea(const double a, const double b, const double c);
  */
 void checkExist(const double a, const double b, const double c);
 
-/**
+ /**@brief проверяет положителины ли стороны треугольника
+ * @param a Длина прямоугольника
+ * @param b Ширина прямоугольника 
+ */
+ void checkPositive(const double a, const double b, const double c);
+ /**@brief проверяет положителины ли стороны прямоугольника
+  * @param a Первая сторона треугольника
+ * @param b Вторая сторона треугольника
+ * @param c Третья сторона треугольника
+ */
+ 
+ void checkPositiveB(const double length, const double width);
+ /**
  * @brief Точка входа в программу
  * @return 0, если программа выполнена корректно, иначе 1
  */
@@ -46,6 +58,8 @@ int main()
             cout << "Enter the width of the rectangle: ";
             double width = getValue();
             cout << "Area of the rectangle is: " << getRectangleArea(length, width) << endl;
+            checkPositiveB( length,width);
+        
         
            cout << "Enter the first side of the triangle: ";
             double a = getValue();
@@ -53,6 +67,8 @@ int main()
             double b = getValue();
             cout << "Enter the third side of the triangle: ";
             double c = getValue();
+            checkPositive( a, b, c);
+            
 
             checkExist(a, b, c); // Проверка существования треугольника
 
@@ -90,5 +106,18 @@ void checkExist(const double a, const double b, const double c)
     {
         cout<<"It can't be triangle"<<endl;
         abort();
-    }
-}
+        }}
+void checkPositive(const double a, const double b, const double c)
+            {
+            if (a<0 or b<0 or c<0)
+            {
+            cout<<"A negative value has been entered"<<endl;
+            abort();
+            }}
+ void checkPositiveB(const double length,const double width)
+            {
+            if (length<0 or width<0)
+            {
+            cout<<"A negative value has been entered"<<endl;
+            abort();
+            }}
