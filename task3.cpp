@@ -21,12 +21,7 @@ using namespace std;
  * @param start - начало интервала
  * @param end - конец интервала
  */
- void checkLim(const double start,const double end);
- /**
-* @brief считывает значение с клавиатуры с проверкой ввода
- * @return введенное значение
-*/
- double getValue();
+double getValue();
 
 int main() {
   
@@ -44,17 +39,11 @@ int main() {
     cout << "---------------------------" << endl;
 
     // Табулирование функции
-    for (double x = start; x <= end; x += step) 
+    for (double x = start; x <end+step; x += step) 
     {
         double y = calculateFunction(x);
 
         cout << "| " << fixed << setprecision(6) << setw(10) << x << " | ";
-
-        if (isnan(y)) {
-            cout << setw(9) << "NaN" << " | // No solution" << endl;
-        } else {
-            cout << fixed << setprecision(6) << setw(10) << y << " |" << endl;
-        }
     }
 cout << "---------------------------" << endl;
 }
@@ -78,15 +67,7 @@ void checkStep(const double step)
         abort();
     }
 }
-void checkLim(const double start,const double end)
-   { if (start > end)
-    {
-        cout << "Ошибка: Начальное значение должно быть меньше или равно конечному." << endl;
-        abort();
-    }
-}
-
-    double getValue()
+   double getValue()
 {
     double value = 0;
     cin>>value;
