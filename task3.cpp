@@ -34,7 +34,6 @@ int main() {
     double start = getValue();
     cout<<"Enter end: ";
     double end = getValue();
-    checkLim(start, end);
     cout<<"Enter step: ";
     double step = getValue();
     checkStep(step);
