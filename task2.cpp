@@ -57,8 +57,9 @@ int main()
             double length = getValue();
             cout << "Enter the width of the rectangle: ";
             double width = getValue();
-            cout << "Area of the rectangle is: " << getRectangleArea(length, width) << endl;
             checkPositiveB( length,width);
+            cout << "Area of the rectangle is: " << getRectangleArea(length, width) << endl;
+           
         
         
            cout << "Enter the first side of the triangle: ";
@@ -80,7 +81,7 @@ int main()
 
 double getValue() 
 {
-    double value;
+    double value=0;
     cin >> value;
     if (cin.fail()) {
         cout << "Incorrect value." << endl;
