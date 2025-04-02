@@ -38,7 +38,7 @@ int main() {
     cout << "---------------------------" << endl;
 
     // Табулирование функции
-    for (double x = start; x <= end; x += step) 
+    for (double x = start; x <end+step; x += step) 
     {
         double y = calculateFunction(x);
 {
