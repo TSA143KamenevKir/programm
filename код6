@@ -1,0 +1,214 @@
+#include <iostream>
+#include <iomanip>
+#include <limits>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+size_t getSize();
+int getValue();
+void checkN(const int n);
+int** getNewArray(const size_t m, const size_t n);
+void deleteArray(int** array, const size_t m);
+void printArray(int** array, const size_t m, const size_t n);
+void fillArray(int** array, const size_t m, const size_t n);
+void fillRandom(int** array, const size_t m, const size_t n, const int start, const int end);
+int** copyArray(int** array, const size_t m, const size_t n);
+void replaceZerosWithMax(int** array, const size_t m, const size_t n);
+void insertZeroRowsAfterMaxColumns(int**& array, size_t& m, size_t& n);
+
+int main() {
+    cout << "Enter m: ";
+    size_t m = getSize();
+    cout << "Enter n: ";
+    size_t n = getSize();
+    int** array = getNewArray(m, n);
+    
+    cout << "Enter the way to fill array: 1 for manual, 2 for random: ";
+    int choice = getValue();
+    int start = 0, end = 0;
+
+    switch (choice) {
+        case 2: // RANDOM
+            cout << "Enter start: ";
+            start = getValue();
+            cout << "Enter end: ";
+            end = getValue();
+            fillRandom(array, m, n, start, end);
+            break;
+        case 1: // MANUAL
+            fillArray(array, m, n);
+            break;
+        default:
+            cout << "Error" << endl;
+            deleteArray(array, m);
+            return 1;
+    }
+
+  cout << "Original array:\n";
+    printArray(array, m, n);
+    
+    // Копируем оригинальный массив для дальнейших операций
+    int** arrayCopy = copyArray(array, m, n);
+    
+    // Заменяем нулевые элементы максимальными по модулю элементами
+    replaceZerosWithMax(arrayCopy, m, n);
+    cout << "Array after replacing zeros with max elements:\n";
+    printArray(arrayCopy, m, n);
+    
+    // Вставляем строки из нулей после каждого столбца с максимальным по модулю элементом
+    insertZeroRowsAfterMaxColumns(arrayCopy, m, n);
+    cout << "Array after inserting zero rows:\n";
+    printArray(arrayCopy, m, n);
+    
+    // Освобождаем память
+    deleteArray(array, m);
+    deleteArray(arrayCopy, m);
+    
+    return 0;
+}
+
+void fillRandom(int** array, const size_t m, const size_t n, const int start, const int end)
+{
+    srand(time(0));
+    for (size_t i = 0; i<m; i++ )
+    {
+        for (size_t j = 0; j<n; j++)
+        {
+            array[i][j] = rand() % (end - start +1 ) + start;
+        }
+    }
+}
+int getValue() {
+    int value = 0;
+    cin >> value;
+    if (cin.fail()) {
+        cout << "Error" << endl;
+        abort();
+    }
+    return value;
+}
+
+size_t getSize() {
+    int n = getValue();
+    checkN(n);
+    return static_cast<size_t>(n);
+}
+
+void checkN(const int n) {
+    if (n <= 0) {
+        cout << "Error: size must be positive" << endl;
+        abort();
+    }
+}
+
+int** getNewArray(const size_t m, const size_t n) {
+    int** array = new int*[m];
+    for (size_t i = 0; i < m; i++) {
+        array[i] = new int[n];
+    }
+    return array;
+}
+
+void deleteArray(int** array, const size_t m) {
+    for (size_t i = 0; i < m; i++) {
+        delete[] array[i];
+    }
+    delete[] array;
+}
+
+void printArray(int** array, const size_t m, const size_t n) {
+    for (size_t i = 0; i < m; i++) {
+        for (size_t j = 0; j < n; j++) {
+            cout << setw(6) << array[i][j];
+        }
+        cout << endl;
+    }
+}
+
+void fillArray(int** array, const size_t m, const size_t n) {
+    cout << "Enter array elements:\n";
+    for (size_t i = 0; i < m; i++) {
+        for (size_t j = 0; j < n; j++) {
+            cout << "Element [" << i << "][" << j << "] = ";
+            array[i][j] = getValue();
+        }
+    }
+}
+
+int** copyArray(int** array, const size_t m, const size_t n) {
+    int** newArray = getNewArray(m, n);
+    for (size_t i = 0; i < m; i++) {
+        for (size_t j = 0; j < n; j++) {
+            newArray[i][j] = array[i][j];
+        }
+    }
+    return newArray;
+}
+
+void replaceZerosWithMax(int** array, const size_t m, const size_t n) {
+    for (size_t j = 0; j < n; j++) {
+        int maxElement =
+numeric_limits<int>::min();
+        
+        // Находим максимальный по модулю элемент в столбце
+        for (size_t i = 0; i < m; i++) {
+            if (abs(array[i][j]) > abs(maxElement)) {
+                maxElement = array[i][j];
+            }
+        }
+
+        // Заменяем нулевые элементы максимальным по модулю элементом
+        for (size_t i = 0; i < m; i++) {
+            if (array[i][j] == 0) {
+                array[i][j] = maxElement;
+            }
+        }
+    }
+}
+
+void insertZeroRowsAfterMaxColumns(int**& array, size_t& m, size_t& n) {
+    for (size_t j = 0; j < n; j++) {
+        int maxElement = numeric_limits<int>::min();
+        bool hasMax = false;
+
+        // Находим максимальный по модулю элемент в столбце
+        for (size_t i = 0; i < m; i++) {
+            if (abs(array[i][j]) > abs(maxElement)) {
+                maxElement = array[i][j];
+                hasMax = true;
+            }
+        }
+
+        // Если нашли максимальный элемент, вставляем строку из нулей
+        if (hasMax) {
+            // Создаем новый массив с увеличенной на 1 строкой
+            int** newArray = new int*[m + 1];
+            for (size_t i = 0; i < m + 1; i++) {
+                newArray[i] = new int[n];
+            }
+
+            // Копируем старые данные и вставляем строку из нулей
+            size_t newRowIndex = 0;
+            for (size_t i = 0; i < m; i++) {
+                for (size_t k = 0; k < n; k++) {
+                    newArray[newRowIndex][k] = array[i][k];
+                }
+                newRowIndex++;
+
+                // Вставляем строку из нулей после текущей строки, если это необходимо
+                if (abs(array[i][j]) == abs(maxElement)) {
+                    for (size_t k = 0; k < n; k++) {
+                        newArray[newRowIndex][k] = 0;
+                    }
+                    newRowIndex++;
+                }
+            }
+
+            // Освобождаем старый массив
+            deleteArray(array, m);
+            array = newArray;
+            m++; // Увеличиваем количество строк
+        }
+    }
+}
