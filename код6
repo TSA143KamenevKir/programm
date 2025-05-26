@@ -4,26 +4,92 @@
 #include <cstdlib>
 #include <ctime>
 using namespace std;
-
+/**
+ * @brief считывает рамер массива 
+ * @param n -размер массива
+ * @return (size_t)n
+ */
 size_t getSize();
+/**
+ * @brief Считывает значение с клавиатуры с проверкой ввода
+ * @return Введенное значение
+ */
 int getValue();
+/**
+ *@brief проверка введённого размера массива
+ * @param n-размер массива
+ */
 void checkN(const int n);
+/**
+ * @brief Создает новый двумерный массив целых чисел.
+ * @param m Количество строк.
+ * @param n Количество столбцов.
+ * @return int** Указатель на созданный двумерный массив.
+ */
 int** getNewArray(const size_t m, const size_t n);
+/**
+ * @brief Освобождает память, занятую массивом.
+ * @param array Указатель на массив.
+ * @param m Количество строк в массиве.
+ */
 void deleteArray(int** array, const size_t m);
-void printArray(int** array, const size_t m, const size_t n);
-void fillArray(int** array, const size_t m, const size_t n);
-void fillRandom(int** array, const size_t m, const size_t n, const int start, const int end);
-int** copyArray(int** array, const size_t m, const size_t n);
-void replaceZerosWithMax(int** array, const size_t m, const size_t n);
-void insertZeroRowsAfterMaxColumns(int**& array, size_t& m, size_t& n);
 
+/**
+ * @brief Выводит содержимое двумерного массива.
+ * @param array Указатель на массив.
+ * @param m Количество строк.
+ * @param n Количество столбцов.
+ */
+void printArray(int** array, const size_t m, const size_t n);
+/**
+ * @brief Заполняет массив элементами, вводимыми пользователем.
+ * @param array Указатель на массив.
+ * @param m Количество строк.
+ * @param n Количество столбцов.
+ */
+void fillArray(int** array, const size_t m, const size_t n);
+/**
+ * @brief Заполняет массив случайными числами в заданном диапазоне.
+ * @param array Указатель на массив.
+ * @param m Количество строк.
+ * @param n Количество столбцов.
+ * @param start Начало диапазона случайных чисел.
+ * @param end Конец диапазона случайных чисел.
+ */
+void fillRandom(int** array, const size_t m, const size_t n, const int start, const int end);
+/**
+ * @brief Копирует содержимое одного массива в новый массив.
+ * @param array Указатель на исходный массив.
+ * @param m Количество строк.
+ * @param n Количество столбцов.
+ * @return int** Указатель на новый массив.
+ */
+int** copyArray(int** array, const size_t m, const size_t n);
+/**
+ * @brief Заменяет нулевые элементы массива максимальными по модулю элементами в соответствующих столбцах.
+ * @param array Указатель на массив.
+ * @param m Количество строк.
+ * @param n Количество столбцов.
+ */
+void replaceZerosWithMax(int** array, const size_t m, const size_t n);
+/**
+ * @brief Вставляет строки, заполненные нулями, после каждого столбца, содержащего максимальный по модулю элемент.
+ * @param array Указатель на массив (по ссылке для возможности изменения).
+ * @param m Количество строк (по ссылке для возможности изменения).
+ * @param n Количество столбцов.
+ */
+void insertZeroRowsAfterMaxColumns(int**& array, size_t& m, size_t& n);
+/**
+ * @brief точка входа в программу.
+ * @return 0
+ */
 int main() {
     cout << "Enter m: ";
     size_t m = getSize();
     cout << "Enter n: ";
     size_t n = getSize();
     int** array = getNewArray(m, n);
-    
+
     cout << "Enter the way to fill array: 1 for manual, 2 for random: ";
     int choice = getValue();
     int start = 0, end = 0;
@@ -47,24 +113,24 @@ int main() {
 
   cout << "Original array:\n";
     printArray(array, m, n);
-    
+
     // Копируем оригинальный массив для дальнейших операций
     int** arrayCopy = copyArray(array, m, n);
-    
+
     // Заменяем нулевые элементы максимальными по модулю элементами
     replaceZerosWithMax(arrayCopy, m, n);
     cout << "Array after replacing zeros with max elements:\n";
     printArray(arrayCopy, m, n);
-    
+
     // Вставляем строки из нулей после каждого столбца с максимальным по модулю элементом
     insertZeroRowsAfterMaxColumns(arrayCopy, m, n);
     cout << "Array after inserting zero rows:\n";
     printArray(arrayCopy, m, n);
-    
+
     // Освобождаем память
     deleteArray(array, m);
     deleteArray(arrayCopy, m);
-    
+
     return 0;
 }
 
@@ -150,7 +216,7 @@ void replaceZerosWithMax(int** array, const size_t m, const size_t n) {
     for (size_t j = 0; j < n; j++) {
         int maxElement =
 numeric_limits<int>::min();
-        
+
         // Находим максимальный по модулю элемент в столбце
         for (size_t i = 0; i < m; i++) {
             if (abs(array[i][j]) > abs(maxElement)) {
