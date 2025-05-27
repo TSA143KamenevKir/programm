@@ -33,13 +33,6 @@ void checkE(const double e);
  * @param k число
  * @return k!
  */
-long long factorial(int k);
-
-/**
- * @brief Вычисляет сумму первых n членов ряда ∑_{k=1}^n ((-1)^k / k!) * k
- * @param n количество членов
- * @return сумма
- */
 double sumN(const int n);
 
 /**
@@ -48,10 +41,10 @@ double sumN(const int n);
  * @return сумма
  */
 double sumE(const double e);
-
+/**@brief точка входа в программу
+ * @return 0
+ */
 int main() {
-    setlocale(LC_ALL, "Russian");
-
     cout << "Введите количество членов ряда (n >= 1): ";
     int n = getValue();
     checkN(n);
@@ -102,15 +95,11 @@ void checkE(const double e) {
         exit(1);
     }
 }
-
-#include <cmath>
-#include <iostream>
-
 double sumN(const int n) {
     double sum = 0.0;
-    double term = 0.0; // Initialize term
+    double term = 0.0; 
     for (int k = 1; k <= n; ++k) {
-        term = (k == 1) ? 1 : (-1.0 / k) * term; // Update term using the new formula
+        term = (k == 1) ? 1 : (-1.0 / k) * term; 
         sum += term;
     }
     return sum;
@@ -118,11 +107,11 @@ double sumN(const int n) {
 
 double sumE(const double e) {
     double sum = 0.0;
-    double term = 0.0; // Initialize term
+    double term = 0.0; 
     int k = 1;
     while (true) {
-        term = (k == 1) ? 1 : (-1.0 / k) * term; // Update term using the new formula
-        if (fabs(term) < e) break;
+        term = (k == 1) ? 1 : (-1.0 / k) * term; 
+        if (fabs(term) > e) break;
         sum += term;
         k++;
     }
