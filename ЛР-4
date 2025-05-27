@@ -109,9 +109,8 @@ double sumE(const double e) {
     double sum = 0.0;
     double term = 0.0; 
     int k = 1;
-    while (true) {
+    while (fabs(term) > e) {
         term = (k == 1) ? 1 : (-1.0 / k) * term; 
-        if (fabs(term) > e) break;
         sum += term;
         k++;
     }
