@@ -70,7 +70,7 @@ int main() {
 }
 
 int getValue() {
-    int value;
+    int value=0;
     cin >> value;
     if (cin.fail()) {
         cerr << "Ошибка ввода! Ожидалось целое число." << endl;
@@ -80,7 +80,7 @@ int getValue() {
 }
 
 double getDouble() {
-    double value;
+    double value=0;
     cin >> value;
     if (cin.fail()) {
         cerr << "Ошибка ввода! Ожидалось число с плавающей точкой." << endl;
@@ -103,18 +103,14 @@ void checkE(const double e) {
     }
 }
 
-long long factorial(int k) {
-    long long result = 1;
-    for (int i = 2; i <= k; ++i) {
-        result *= i;
-    }
-    return result;
-}
+#include <cmath>
+#include <iostream>
 
 double sumN(const int n) {
     double sum = 0.0;
+    double term = 0.0; // Initialize term
     for (int k = 1; k <= n; ++k) {
-        double term = pow(-1, k) * k / factorial(k);
+        term = (k == 1) ? 1 : (-1.0 / k) * term; // Update term using the new formula
         sum += term;
     }
     return sum;
@@ -122,16 +118,13 @@ double sumN(const int n) {
 
 double sumE(const double e) {
     double sum = 0.0;
+    double term = 0.0; // Initialize term
     int k = 1;
     while (true) {
-        double term = pow(-1, k) * k / factorial(k);
+        term = (k == 1) ? 1 : (-1.0 / k) * term; // Update term using the new formula
         if (fabs(term) < e) break;
         sum += term;
         k++;
-        if (k > 1000) { // Ограничение на количество итераций
-            cerr << "Превышено максимальное число итераций." << endl;
-            break;
-        }
     }
     return sum;
 }
