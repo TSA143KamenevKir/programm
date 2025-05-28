@@ -1,320 +1,226 @@
 #include <iostream>
-#include <iomanip>
-#include <cstdlib> // для abs и rand
-#include <ctime>   // для time
-
+#include <cstdlib>
+#include <cmath>
+#include <ctime>
 using namespace std;
 
-// --- Функции ввода и проверки ---
 /**
- * @brief Считывает значение с клавиатуры с проверкой ввода.
- * @return Введенное значение.
- */
-int getValue();
-/**
- * @brief Считывает размер массива с клавиатуры и проверяет его на положительность.
- * @return Размер массива (size_t).
- */
-size_t getSize();
-/**
- * @brief Проверяет, что введенное значение является положительным.
- * @param n - Значение для проверки.
- */
-void checkPositive(const int n);
-/**
- * @brief Проверяет, что значение start меньше значения end.
- * @param start - Начальное значение диапазона.
- * @param end - Конечное значение диапазона.
- */
-void checkStep(const int start,const int end);
+*@brief Считывает значиния с клавиатуры с проверкой ввода
+* @return возвращает значение, если оно правильное, иначе завершает программу
+*/
+double getValue();
 
-// --- Работа с динамическим массивом ---
 /**
- * @brief Создает новый двумерный массив целых чисел.
- * @param rows - Количество строк.
- * @param cols - Количество столбцов.
- * @return Указатель на созданный двумерный массив (int**).
- */
-int** createArray(size_t rows, size_t cols);
-/**
- * @brief Освобождает память, занятую массивом.
- * @param array - Указатель на массив.
- * @param rows - Количество строк в массиве.
- */
-void deleteArray(int** array, size_t rows);
-/**
- * @brief Выводит содержимое двумерного массива на экран.
- * @param array - Указатель на массив.
- * @param rows - Количество строк.
- * @param cols - Количество столбцов.
- */
-void printArray(int** array, size_t rows, size_t cols);
-/**
- * @brief Заполняет массив элементами, вводимыми пользователем.
- * @param array - Указатель на массив.
- * @param rows - Количество строк.
- * @param cols - Количество столбцов.
- */
-void fillArray(int** array, size_t rows, size_t cols);
-/**
- * @brief Заполняет массив случайными числами в заданном диапазоне.
- * @param array - Указатель на массив.
- * @param rows - Количество строк.
- * @param cols - Количество столбцов.
- * @param start - Начало диапазона случайных чисел.
- * @param end - Конец диапазона случайных чисел.
- */
-void fillArrayWithRandom(int** array, size_t rows, size_t cols, int start, int end);
+*@brief Заполняет двумерный массив случайными значениями.
+* @param array Указатель на двумерный массив.
+* @param rows Количество строк в массиве.
+* @param cols Количество столбцов в массиве.
+*/
+void fillArrayRandomly(int** array, const int rows, const int cols);
 
-// --- Логика задачи ---
 /**
- * @brief Находит максимальный по модулю элемент в указанном столбце.
- * @param array - Указатель на массив.
- * @param rows - Количество строк.
- * @param col - Индекс столбца.
- * @return Максимальный по модулю элемент в столбце.
- */
-int getMaxAbsInColumn(int** array, size_t rows, size_t col);
+*@brief Заменяет нулевые элементы в столбцах двумерного массива на максимальные по модулю значения в этих столбцах.
+* @param  array Указатель на двумерный массив, в котором нужно заменить нулевые элементы.
+* @param rows Количество строк в массиве.
+* @param cols Количество столбцов в массиве
+*/
+void replaceZeroWithMaxAbsElement(int** array, const int rows, const int cols);
+
 /**
- * @brief Заменяет нулевые элементы массива максимальными по модулю элементами в соответствующих столбцах.
- * @param array - Указатель на массив.
- * @param rows - Количество строк.
- * @param cols - Количество столбцов.
- */
-void replaceZerosWithMax(int** array, size_t rows, size_t cols);
+@brief вставляет нули после элемента с максимальным по модулю значением в каждом столбце двумерного массива
+* @param  array Указатель на двумерный массив, в котором нужно заменить нулевые элементы.
+* @param arr3 Указатель на новый массив, в который будут вставлены нули.
+* @param rows Количество строк в массиве.
+* @param cols Количество столбцов в массиве
+*/
+void insertZerosAfterMaxAbsColumn(int** array, int** arr3, const int rows, const int cols);
+
 /**
- * @brief Находит индекс строки с максимальным элементом в указанном столбце.
- * @param array - Указатель на массив.
- * @param rows - Количество строк.
- * @param col - Индекс столбца.
- * @return Индекс строки с максимальным элементом.
- */
-size_t findRowWithMaxInColumn(int** array, size_t rows, size_t col);
+*brief Выводит двумерный массив на экран.
+* @param  array Указатель на двумерный массив, в котором нужно заменить нулевые элементы.
+* @param rows Количество строк в массиве.
+* @param cols Количество столбцов в массиве
+*/
+void printArray(int** array, const int rows, const int cols);
+
 /**
- * @brief Вставляет строку, заполненную нулями, после указанной строки.
- * @param array - Указатель на массив (по ссылке для возможности изменения).
- * @param rows - Количество строк (по ссылке для возможности изменения).
- * @param cols - Количество столбцов.
- * @param insertAfterRow - Индекс строки, после которой будет вставлена новая строка.
- * @return Указатель на новый массив.
- */
-int** insertZeroRow(int** array, size_t& rows, size_t cols, size_t insertAfterRow);
+*@brief Создает новый двумерный массив с заданным количеством строк и столбцов.
+* @param rows Количество строк в новом массиве.
+* @param columns Количество столбцов в новом массиве.
+* @return Указатель на новый двумерный массив типа int.
+*/
+int** getNewArray(const int rows, const int columns);
+
 /**
- * @brief Вставляет строки, заполненные нулями, после каждого столбца, содержащего максимальный по модулю элемент.
- * @param array - Указатель на массив (по ссылке для возможности изменения).
- * @param rows - Количество строк (по ссылке для возможности изменения).
- * @param cols - Количество столбцов.
- */
-void insertZeroRowsAfterMaxColumns(int**& array, size_t& rows, size_t cols);
+*@brief Создает копию существующего двумерного массива с заданным количеством строк и столбцов.
+* @param arr Указатель на существующий двумерный массив типа int, который нужно скопировать.
+* @param rows Количество строк в существующем массиве.
+* @param columns Количество столбцов в существующем массиве.
+* @return Указатель на новую копию двумерного массива типа int.
+*/
+int** copyArray(int** arr, const int rows, const int columns);
+
 /**
- * @brief Точка входа в программу.
- * @return 0.
+*Освобождает память, выделенную под двумерный массив типа int.
+* @param arr Указатель на двумерный массив типа int, который нужно освободить.
+* @param rows Количество строк в двумерном массиве.
+*/
+void deleteArray(int** arr, const int rows);
+
+/**
+ * Функция checkPositiveInput проверяет, является ли введенное значение положительным числом.
+ * @param value - целочисленное значение, которое необходимо проверить
+ * @return true, если значение положительное; false в противном случае
  */
+bool checkPositiveInput(const int value);
+
+/**
+*brief Точка входа в программу
+* return 0
+*/
 int main()
 {
-    srand(static_cast<unsigned int>(time(0))); // Инициализация генератора случайных чисел
+    setlocale(LC_ALL, "Russian");
+    srand(time(0));
 
-    cout << "Enter m (rows): ";
-    size_t m = getSize();
-    cout << "Enter n (cols): ";
-    size_t n = getSize();
-
-    int** array = createArray(m, n);
-
-    cout << "Do you want to fill the array manually (1) or randomly (2) ";
-    int choice = getValue();
-    if (choice == 1) {
-        cout << "Fill the array manually:\n";
-        fillArray(array, m, n);
-    } else if (choice == 2) {
-        cout << "Enter start value: ";
-        int start = getValue();
-        cout << "Enter end value: ";
-        int end = getValue();
-        checkStep(start,end);
-        fillArrayWithRandom(array, m, n, start, end);
-    } else {
-        cout << "Invalid choice. Exiting." << endl;
-        deleteArray(array, m);
+    cout << "Введите количество строк: ";
+    int max_rows = getValue();
+    cout << "Введите количество столбцов: ";
+    int max_cols = getValue();
+    if (checkPositiveInput(max_rows) && checkPositiveInput(max_cols))
+    {
+        cout << "Оба значения max_rows и max_cols положительные." << endl;
+    }
+    else
+    {
+        cout << "Одно из значений max_rows или max_cols не положительное." << endl;
         return 1;
     }
+    int** arr1 = getNewArray(max_rows, max_cols);
+    fillArrayRandomly(arr1, max_rows, max_cols);
 
-    cout << "Original Array:\n";
-    printArray(array, m, n);
+    cout << "Случайно заполненный массив:" << endl;
+    printArray(arr1, max_rows, max_cols);
 
-    replaceZerosWithMax(array, m, n);
-    cout << "Array after replacing zeros with max abs elements:\n";
-    printArray(array, m, n);
+    int** secondArr = copyArray(arr1, max_rows, max_cols);
+    replaceZeroWithMaxAbsElement(secondArr, max_rows, max_cols);
 
-    insertZeroRowsAfterMaxColumns(array, m, n);
-    cout << "Array after inserting zero rows:\n";
-    printArray(array, m, n);
+    cout << "\nМассив после замены нулей максимальными по модулю элементами в каждом столбце:" << endl;
+    printArray(secondArr, max_rows, max_cols);
 
-    deleteArray(array, m);
+    size_t newcols = max_cols + max_rows;
+    int** arr3 = getNewArray(max_rows, newcols);
+    insertZerosAfterMaxAbsColumn(arr1, arr3, max_rows, max_cols);
+
+    cout << "\nМассив после вставки строк из нулей после столбцов с максимальным по модулю элементом:" << endl;
+    printArray(arr3, max_rows, newcols);
+    deleteArray(arr3, max_rows);
+    deleteArray(secondArr, max_rows);
+    deleteArray(arr1, max_rows);
+
     return 0;
 }
 
-// --- Реализация функций ---
-
-int getValue()
+bool checkPositiveInput(const int value)
 {
-    int value=0;
-    cin >> value;
-    if (cin.fail())
+    if (value > 0)
     {
-        cout << "Input error" << endl;
-        exit(EXIT_FAILURE);
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+void fillArrayRandomly(int** array, int rows, int cols) {
+    for (size_t i = 0; i < rows; ++i) {
+        for (size_t j = 0; j < cols; ++j) {
+            array[i][j] = rand() - RAND_MAX / 2;
+        }
+    }
+}
+
+int findMaxAbsIndex(int** array, int rows, int cols, int column) {
+    int maxAbsValue = 0;
+    for (size_t i = 0; i < rows; ++i) {
+        if (abs(array[i][column]) > abs(array[maxAbsValue][column])) {
+            maxAbsValue = i;
+        }
+    }
+    return maxAbsValue;
+}
+
+
+void replaceZeroWithMaxAbsElement(int** array, const int rows, const int cols) {
+    for (size_t j = 0; j < cols; ++j) {
+        int maxAbsIndex = findMaxAbsIndex(array, rows, cols, j);
+        if (array[maxAbsIndex][j] == 0) {
+            array[maxAbsIndex][j] = abs(array[maxAbsIndex][j]);
+        }
+    }
+}
+
+void insertZerosAfterMaxAbsColumn(int** array, int** arr3, const int rows, const int cols) {
+    for (size_t j = 0; j < cols; ++j) {
+        int maxAbsIndex = findMaxAbsIndex(array, rows, cols, j);
+        for (size_t i = 0; i < rows; ++i) {
+            arr3[i][j] = array[i][j];
+        }
+        if (maxAbsIndex != rows - 1) {
+            for (size_t k = maxAbsIndex + 1; k < rows; ++k) {
+                arr3[k][j + k - maxAbsIndex] = 0;
+            }
+        }
+    }
+}
+
+void printArray(int** array, const int rows, const int cols) {
+    for (size_t i = 0; i < rows; ++i)
+    {
+        for (size_t j = 0; j < cols; ++j) {
+            cout << array[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
+double getValue() {
+    double value;
+    cin >> value;
+    if (cin.fail()) {
+        cout << "Некорректное значение" << endl;
+        abort();
     }
     return value;
 }
 
-size_t getSize()
+int** getNewArray(const int max_rows, const int max_cols)
 {
-    int n = getValue();
-    checkPositive(n);
-    return static_cast<size_t>(n);
-}
-
-void checkPositive(int n)
-{
-    if (n <= 0)
+    int** array = new int* [max_rows];
+    for (size_t i = 0; i < max_rows; ++i)
     {
-        cout << "Value must be positive" << endl;
-        exit(EXIT_FAILURE);
+        array[i] = new int[max_cols];
     }
-}
-void checkStep(const int start,const int end){
-if(start>end)
-{cout << "the value of start must be greater than end" << endl;
-    abort();}}
-
-int** createArray(size_t rows, size_t cols)
-{
-    int** array = new int*[rows];
-    for (size_t i = 0; i < rows; i++)
-        array[i] = new int[cols];
     return array;
 }
 
-void deleteArray(int** array, size_t rows)
-{
-    for (size_t i = 0; i < rows; i++)
-        delete[] array[i];
-    delete[] array;
-}
-
-void printArray(int** array, size_t rows, size_t cols)
-{
+int** copyArray(int** arr, const int rows, const int columns) {
+    int** resultArray = getNewArray(rows, columns);
     for (size_t i = 0; i < rows; i++)
     {
-        for (size_t j = 0; j < cols; j++)
-            cout << setw(6) << array[i][j];
-        cout << '\n';
-    }
-}
-
-void fillArray(int** array, size_t rows, size_t cols)
-{
-    for (size_t i = 0; i < rows; i++)
-        for (size_t j = 0; j < cols; j++)
+        for (size_t j = 0; j < columns; j++)
         {
-            cout << "Enter array[" << i << "][" << j << "]: ";
-            array[i][j] = getValue();
-        }
-}
-
-void fillArrayWithRandom(int** array, size_t rows, size_t cols, int start, int end)
-{
-    for (size_t i = 0; i < rows; i++)
-        for (size_t j = 0; j < cols; j++)
-        {
-            array[i][j] = rand() % (end - start + 1) + start; // Генерация случайного числа в диапазоне [start, end]
-        }
-}
-
-int getMaxAbsInColumn(int** array, size_t rows, size_t col)
-{
-    int maxVal = array[0][col];
-    for (size_t i = 1; i < rows; i++)
-    {
-        if (abs(array[i][col]) > abs(maxVal))
-            maxVal = array[i][col];
-    }
-    return maxVal;
-}
-
-void replaceZerosWithMax(int** array, size_t rows, size_t cols)
-{
-    for (size_t col = 0; col < cols; col++)
-    {
-        int maxAbs = getMaxAbsInColumn(array, rows, col);
-        for (size_t row = 0; row < rows; row++)
-        {
-            if (array[row][col] == 0)
-                array[row][col] = maxAbs;
+            resultArray[i][j] = arr[i][j];
         }
     }
+    return resultArray;
 }
 
-size_t findRowWithMaxInColumn(int** array, size_t rows, size_t col)
-{
-    int maxVal = array[0][col];
-    size_t maxRow = 0;
-    for (size_t i = 1; i < rows; i++)
-    {
-        if (array[i][col] > maxVal)
-        {
-            maxVal = array[i][col];
-            maxRow = i;
-        }
+
+void deleteArray(int** arr, const int rows) {
+    for (size_t i = 0; i < rows; ++i) {
+        delete[] arr[i];
     }
-    return maxRow;
-}
-
-int** insertZeroRow(int** array, size_t& rows, size_t cols, size_t insertAfterRow)
-{
-    int** newArray = createArray(rows + 1, cols);
-
-    // Копируем строки до вставки
-    for (size_t i = 0; i <= insertAfterRow; i++)
-        for (size_t j = 0; j < cols; j++)
-            newArray[i][j] = array[i][j];
-
-    // Вставляем строку из нулей
-    for (size_t j = 0; j < cols; j++)
-        newArray[insertAfterRow + 1][j] = 0;
-
-    // Копируем оставшиеся строки
-    for (size_t i = insertAfterRow + 1; i < rows; i++)
-        for (size_t j = 0; j < cols; j++)
-            newArray[i + 1][j] = array[i][j];
-
-    deleteArray(array, rows);
-    rows++;
-    return newArray;
-}
-
-void insertZeroRowsAfterMaxColumns(int**& array, size_t& rows, size_t cols)
-{
-    // Чтобы корректно вставлять строки, идём с конца, чтобы индексы не смещались
-    for (int col = static_cast<int>(cols) - 1; col >= 0; col--)
-    {
-        int maxAbs = getMaxAbsInColumn(array, rows, col);
-
-        // Ищем первую строку с максимальным элементом в столбце
-        size_t maxRow = rows; // если не нашли
-        for (size_t row = 0; row < rows; row++)
-        {
-            if (array[row][col] == maxAbs)
-            {
-                maxRow = row;
-                break;
-            }
-        }
-
-        if (maxRow < rows)
-        {
-            array = insertZeroRow(array, rows, cols, maxRow);
-        }
-    }
+    delete[] arr;
 }
