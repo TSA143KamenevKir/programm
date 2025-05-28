@@ -186,7 +186,7 @@ void printArray(int** array, const int rows, const int cols) {
 }
 
 double getValue() {
-    double value;
+    double value=0;
     cin >> value;
     if (cin.fail()) {
         cout << "Некорректное значение" << endl;
